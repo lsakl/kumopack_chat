@@ -15,8 +15,9 @@ const UserCard: React.FC<Props> = ({ data }) => {
   function partnerSelected(data:any) {
     setPartner({ ...partner, 
       userId      : data._id,
-      firstName   : data.firstName,
-      lastName    : data.lastName,
+      uuId        : data.uuId,
+      fullnameTh  : data.fullnameTh,
+      fullnameEn  : data.fullnameEn,
       email       : data.email,
       image       : data.image,
       status      : data.status,

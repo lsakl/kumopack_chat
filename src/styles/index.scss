@@ -36965,6 +36965,10 @@ div.my_container{
     letter-spacing: 0.06em;
     flex-shrink: 0;
     position: relative;
+
+    img {
+      height: -webkit-fill-available;
+    }
   }
 
   .user-avatar + .user-info,

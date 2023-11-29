@@ -5,24 +5,26 @@ interface Props {
 }
 
 interface Partner {
-  userId        : string;
-  firstName     : string;
-  lastName      : string;
-  email         : string;
-  image         : string;
-  userType      : number;
-  status        : number;
+  userId      : string;
+  uuId        : string;
+  fullnameTh  : string;
+  fullnameEn  : string;
+  email       : string;
+  image       : string;
+  userType    : string;
+  status      : number;
 }
 
 interface User {
-  userId    : string;
-  firstName : string;
-  lastName  : string;
-  email     : string;
-  image     : string;
-  userType  : number;
-  status    : number;
-  token     : string;
+  userId      : string;
+  uuId        : string;
+  fullnameTh  : string;
+  fullnameEn  : string;
+  email       : string;
+  image       : string;
+  userType    : string;
+  accessToken : string;
+  status      : number;
 }
 
 interface Messages {
@@ -66,27 +68,29 @@ interface StatusContextValue {
 
 export const PartnerContext = React.createContext<PartnerContextValue>({
   partner: {
-    userId        : '',
-    firstName     : '',
-    lastName      : '',
-    email         : '',
-    image         : '',
-    userType      : 0,
-    status        : 0
+    userId      : '',
+    uuId        : '',
+    fullnameTh  : '',
+    fullnameEn  : '',
+    email       : '',
+    image       : '',
+    userType    : '',
+    status      : 0,
   },
   setPartner: () => {},
 });
 
 export const UserContext = React.createContext<UserContextValue>({
   user: {
-    userId    : "",
-    firstName : '',
-    lastName  : '',
-    email     : '',
-    image     : '',
-    userType  : 0,
-    status    : 0,
-    token     : "",
+    userId      : '',
+    uuId        : '',
+    fullnameTh  : '',
+    fullnameEn  : '',
+    email       : '',
+    image       : '',
+    userType    : '',
+    accessToken : '',
+    status      : 0,
   },
   setUser: () => {},
 });
@@ -101,27 +105,28 @@ export const StatusContext = React.createContext<StatusContextValue>({
   setStatus: () => {},
 });
 
-
 export const CenterContextProvider = ({ children }: Props) => {
   const [partner, setPartner] = useState<Partner>({
-    userId       : '',
-    firstName    : '',
-    lastName     : '',
-    email        : '',
-    image        : '',
-    userType     : 0,
-    status       : 0
+    userId      : '',
+    uuId        : '',
+    fullnameTh  : '',
+    fullnameEn  : '',
+    email       : '',
+    image       : '',
+    userType    : '',
+    status      : 0,
   });
 
   const [user, setUser] = useState<User>({
-    userId    : "",
-    firstName : '',
-    lastName  : '',
-    email     : '',
-    image     : '',
-    userType  : 0,
-    status    : 0,
-    token     : "",
+    userId      : '',
+    uuId        : '',
+    fullnameTh  : '',
+    fullnameEn  : '',
+    email       : '',
+    image       : '',
+    userType    : '',
+    accessToken : '',
+    status      : 0,
   });
 
   const [messages, setMessages] = useState<Messages[]>([]);

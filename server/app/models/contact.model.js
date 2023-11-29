@@ -2,51 +2,51 @@ const mongoClient   = require('../config/db');
 const mongoDB       = require('mongodb');
 const Contact = function(contact) { };
 
-Contact.addContact = async (userId, contactUserId, result) => {
+// Contact.addContact = async (userId, contactUserId, result) => {
 
-    const contactData = [
-        {
-            userId: userId,
-            contactUserId: contactUserId,
-            datetime: new Date(),
-            lastMessage: '',
-            messageFrom: '',
-            messageTo: '',
-            messageUpdate: new Date(),
-            status: 1
-        },
-        {
-            userId: contactUserId,
-            contactUserId: userId,
-            datetime: new Date(),
-            lastMessage: '',
-            messageFrom: '',
-            messageTo: '',
-            messageUpdate: new Date(),
-            status: 1
-        },
-    ];
+//     const contactData = [
+//         {
+//             userId: userId,
+//             contactUserId: contactUserId,
+//             datetime: new Date(),
+//             lastMessage: '',
+//             messageFrom: '',
+//             messageTo: '',
+//             messageUpdate: new Date(),
+//             status: 1
+//         },
+//         {
+//             userId: contactUserId,
+//             contactUserId: userId,
+//             datetime: new Date(),
+//             lastMessage: '',
+//             messageFrom: '',
+//             messageTo: '',
+//             messageUpdate: new Date(),
+//             status: 1
+//         },
+//     ];
 
-    try {
-        const check = await mongoClient.collection('contacts').find({userId:userId, contactUserId:contactUserId});
+//     try {
+//         const check = await mongoClient.collection('contacts').find({userId:userId, contactUserId:contactUserId});
 
-        if(!check.length){
-            const res   = await mongoClient.collection('contacts').insertMany(contactData);
-            if (!res.acknowledged) {
-                result({ status: 500, message: "เกิดข้อผิดพลาดในการดำเนินการ", data: res });
-                return;
-            }
-            result(null, { status: 200, message: "เพื่มข้อมูลเรียบร้อยแล้ว", data: res });
-            return;
-        }else{
-            result(null, { status: 201, message: "มีรายชื่อผู้ติดต่ออยู่แล้ว", data: check });
-            return;
-        }
+//         if(!check.length){
+//             const res   = await mongoClient.collection('contacts').insertMany(contactData);
+//             if (!res.acknowledged) {
+//                 result({ status: 500, message: "เกิดข้อผิดพลาดในการดำเนินการ", data: res });
+//                 return;
+//             }
+//             result(null, { status: 200, message: "เพื่มข้อมูลเรียบร้อยแล้ว", data: res });
+//             return;
+//         }else{
+//             result(null, { status: 201, message: "มีรายชื่อผู้ติดต่ออยู่แล้ว", data: check });
+//             return;
+//         }
 
-    } catch (err) {
-        result({ status: 500, message: "เกิดข้อผิดพลาดในการดำเนินการ", data: err });
-    }
-};
+//     } catch (err) {
+//         result({ status: 500, message: "เกิดข้อผิดพลาดในการดำเนินการ", data: err });
+//     }
+// };
 
 Contact.getContactList = async (userId, search, page,  limit, result) => {
     const skipAmount = (page - 1) * limit;
@@ -58,7 +58,7 @@ Contact.getContactList = async (userId, search, page,  limit, result) => {
                 .skip(skipAmount)
                 .limit(limit)
                 .toArray();
-
+            
             const resContectTotal = (await mongoClient.collection('contacts')
                 .find({userId : userId})
                 .sort({ messageUpdate: -1 })

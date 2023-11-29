@@ -28,8 +28,8 @@ const TopMenu: React.FC<TopMenuProps> = ({ setShowRightMenu, setOpenChat, showRi
             <InfoUser 
               data={{
                 userId        : partner.userId,
-                firstName     : partner.firstName,
-                lastName      : partner.lastName,
+                fullnameTh    : partner.fullnameTh,
+                fullnameEn    : partner.fullnameEn,
                 email         : partner.email,
                 image         : partner.image,
                 last_message  : '',

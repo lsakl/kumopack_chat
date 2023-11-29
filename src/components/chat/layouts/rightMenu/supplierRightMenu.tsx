@@ -85,14 +85,14 @@ const SupplierRightMenu: React.FC<RightMenuProps> = ({ show, setShowRightMenu, r
 									<div className="nk-chat-right">
 										<InfoUser 
 											data={{
-												userId        : partner.userId,
-												firstName     : partner.firstName,
-												lastName      : partner.lastName,
-												email         : partner.email,
-												image         : partner.image,
-												last_message  : '',
-												userType      : partner.userType,
-												time          : ''
+												userId			: partner.userId,
+												fullnameTh		: partner.fullnameTh,
+												fullnameEn		: partner.fullnameEn,
+												email			: partner.email,
+												image			: partner.image,
+												last_message	: '',
+												userType		: partner.userType,
+												time			: ''
 											}} 
 											status={partner.status} 
 											type='top' 

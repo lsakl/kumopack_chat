@@ -3,8 +3,8 @@ const User = function(user) { };
 
 User.checkInsertData = async (userData, result) => {
     if (
-        !userData.firstName || userData.firstName === "" ||
-        !userData.lastName || userData.lastName === "" ||
+        !userData.fullnameTh || userData.fullnameTh === "" ||
+        !userData.fullnameEn || userData.fullnameEn === "" ||
         !userData.email || userData.email === "" ||
         !userData.image || userData.image === "" ||
         !userData.userType || userData.userType === ""
@@ -14,12 +14,12 @@ User.checkInsertData = async (userData, result) => {
     }
 
     const data = {
-        firstName : userData.firstName,
-        lastName  : userData.lastName,
-        email     : userData.email,
-        image     : userData.image,
-        userType  : userData.userType,
-        status    : 1
+        uuid        : userData.uuid,
+        fullnameTh  : userData.fullnameTh,
+        fullnameEn  : userData.fullnameEn,
+        email       : userData.email,
+        image       : userData.image,
+        userType    : userData.userType,
     };
 
     try {

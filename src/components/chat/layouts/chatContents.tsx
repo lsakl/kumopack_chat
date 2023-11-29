@@ -205,7 +205,7 @@ const ChatContents: React.FC<ChildProps> = ({ socket }) => {
                     key={key}
                     type={item.messageType}
                     who={(item.from===user.userId)?'me':'you'}
-                    name={(item.from===user.userId)?'':`${partner.firstName} ${partner.lastName}`}
+                    name={(item.from===user.userId)?'':`${partner.fullnameTh} ${partner.fullnameEn}`}
                     data={item.message} 
                     datetime={new Date(item.datetime)}
                   />

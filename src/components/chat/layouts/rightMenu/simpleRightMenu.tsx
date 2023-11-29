@@ -22,6 +22,9 @@ const RightMenu: React.FC<RightMenuProps> = ({ show, setShowRightMenu, rightMenu
 	const [showSection3, setShowSection3] 	= useState<boolean>(false)
 	// const [showSection4, setShowSection4] = useState<boolean>(false)
 
+	const [showSection5, setShowSection5] 	= useState<boolean>(false)
+	const [showSection6, setShowSection6] 	= useState<boolean>(false)
+
 	// const editNoteData: string[] = [
 	// 	'อีแต๋นลาเต้ เอ๋อดีกรี พาสตามาร์เก็ตติ้งแต๋วดิสเครดิต แมคเคอเรลคอนโดคาเฟ่',
 	// 	'นิวไทเฮาออดิทอเรียมวิป เพลย์บอย จิ๊ก ตรวจทานแฮนด์เซอร์วิส',
@@ -83,14 +86,14 @@ const RightMenu: React.FC<RightMenuProps> = ({ show, setShowRightMenu, rightMenu
 									<div className="nk-chat-right">
 										<InfoUser 
 											data={{
-												userId        : partner.userId,
-												firstName     : partner.firstName,
-												lastName      : partner.lastName,
-												email         : partner.email,
-												image         : partner.image,
-												last_message  : '',
-												userType      : partner.userType,
-												time          : ''
+												userId			: partner.userId,
+												fullnameTh		: partner.fullnameTh,
+												fullnameEn      : partner.fullnameEn,
+												email			: partner.email,
+												image			: partner.image,
+												last_message	: '',
+												userType		: partner.userType,
+												time			: ''
 											}} 
 											status={partner.status} 
 											type='top' 
@@ -298,6 +301,82 @@ const RightMenu: React.FC<RightMenuProps> = ({ show, setShowRightMenu, rightMenu
 												/>
 											</div>
 										</DefaultAccordion> */}
+
+										{partner.userType==="supplier" && (
+										<DefaultAccordion
+											show={showSection5}
+											setShow={setShowSection5}
+											title={'History'}
+											icon={'icon ni ni-todo fw-bold'}>
+											<div style={{ padding: '1rem 2.5rem' }}>
+												<div className="row border py-2 rounded mb-2">
+													<div className="col-12">
+														<div style={{ fontSize: '14px', fontWeight: 600 }}>
+															บริษัท จินดาสยาม จำกัด: (20-09-2020)
+														</div>
+													</div>
+													<div className="col-12">
+														<div style={{ fontSize: '14px', color: '#c6c5c5' }}>
+															This is an example of message history
+														</div>
+													</div>
+												</div>
+												<div className="row border py-2 rounded">
+													<div className="col-12">
+														<div style={{ fontSize: '14px', fontWeight: 600 }}>
+															บริษัท จินดาสยาม จำกัด: (18-09-2020)
+														</div>
+													</div>
+													<div className="col-12">
+														<div style={{ fontSize: '14px', color: '#c6c5c5' }}>
+															This is an example of message history
+														</div>
+													</div>
+												</div>
+											</div>
+										</DefaultAccordion>
+										)}
+										{partner.userType==="supplier" && (
+										<DefaultAccordion
+											show={showSection6}
+											setShow={setShowSection6}
+											title={'Tax Information'}
+											icon={'icon ni ni-todo fw-bold'}>
+											<div className="chat-profile-status" style={{ height: 500 }}>
+												<div className="row">
+													<div className="col-6 d-flex align-items-center">
+														<label className="title">Company Name:</label>
+													</div>
+													<div className="col-6 d-flex align-items-center">
+														<label className="data">บริษัท จินดาสยาม จำกัด</label>
+													</div>
+												</div>
+												<div className="row">
+													<div className="col-6 d-flex align-items-center">
+														<label className="title">Tax ID:</label>
+													</div>
+													<div className="col-6 d-flex align-items-center">
+														<label className="data">0-9940-00164-17-3</label>
+													</div>
+												</div>
+												<div className="row">
+													<div className="col-6 d-flex align-items-center">
+														<label className="title">Address:</label>
+													</div>
+													<div className="col-6 d-flex align-items-center">
+														<label className="data">
+															618/1 ถ.มักกะสัน แขวงมักกะสัน เขตราชเทวี กทม. 10400
+														</label>
+													</div>
+													<div className="col-12 d-flex align-items-center justify-content-center mt-2">
+														<button type="button" className="btn btn-sm btn-view-profile-c-3 w-100">
+															ขอรายละเอียดเพิ่มเติม
+														</button>
+													</div>
+												</div>
+											</div>
+										</DefaultAccordion>
+										)}
 									</div>
 								</div>
 							</div>

@@ -15,7 +15,7 @@ type Props = {
 };
 
 const InfoUser: React.FC<Props> = ({ data, status, type }) => {
-  const { t } = useTranslation();
+  const { t, i18n  } = useTranslation();
   const statusData = [t('offline'), t('online'), t('busy')];
   const dateTimeToDisplay = (createDateTime: any) => {
     return createDateTime!=='null'&&createDateTime?moment(createDateTime).fromNow():'';
@@ -26,7 +26,7 @@ const InfoUser: React.FC<Props> = ({ data, status, type }) => {
       <ChatAvatar image={data.image} status={status} />
       <div className={(type==="top")?"user-info":"chat-info"}>
         <div className="chat-from">
-          <div className={(type === "top") ? "lead-text name-text-title info-user-box" : "name name-text"}>{`${data.firstName} ${data.lastName}`}</div>
+          <div className={(type === "top") ? "lead-text name-text-title info-user-box" : "name name-text"}>{`${data[`fullname${i18n.language.charAt(0).toUpperCase() + i18n.language.slice(1)}`]}`}</div>
           {(type === "top") ? 
           <span className="badge span-online">
             <i className="status dot dot-text-lg dot-text-success"></i>

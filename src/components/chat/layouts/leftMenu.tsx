@@ -38,14 +38,16 @@ const LeftMenu: React.FC<LeftMenuProps> = ({ socket, setOpenChat }) => {
       _page = 1;
       setPage(1);
     }
+    
     const response = await getUserListData(user.userId, searchUser, _page, limit);
-    if(response.status===200  && response.data.length>0){
+    if(response && response.status===200  && response.data.length>0){
 
       if(page===1 || (response.search===searchUser && searchUser !== searchBefore)){
         setPartner({ ...partner,
           userId        : response.data[0]._id,
-          firstName     : response.data[0].firstName,
-          lastName      : response.data[0].lastName,
+          uuId          : response.data[0].uuId,
+          fullnameTh    : response.data[0].fullnameTh,
+          fullnameEn    : response.data[0].fullnameEn,
           email         : response.data[0].email,
           image         : response.data[0].image,
           userType      : response.data[0].userType,
@@ -63,16 +65,17 @@ const LeftMenu: React.FC<LeftMenuProps> = ({ socket, setOpenChat }) => {
 
       setPage(_page+1);
       setLoading(false);
-    }else if(response.total>0 && response.data.length===0){
+    }else if(response && response.total>0 && response.data.length===0){
       setLoadingEnd(true);
     }else{
       setPartner({ ...partner,
         userId        : '',
-        firstName     : '',
-        lastName      : '',
+        uuId          : '',
+        fullnameTh    : '',
+        fullnameEn    : '',
         email         : '',
         image         : '',
-        userType      : 0,
+        userType      : '',
         status        : 0,
       });
       setPartnerDataList([]);

@@ -21,7 +21,7 @@ const ChatBubbles: React.FC<Props> = ({ type, who, name, data, datetime }) => {
         <div className={`chat is-${who}`}>
             { who==="you" && 
                 <div className="chat-avatar">
-                    <ChatAvatar image={partner.image} alt={ `รูปของคุณ ${partner.firstName} ${partner.lastName}` } status={partner.status} /> 
+                    <ChatAvatar image={partner.image} alt={ `รูปของคุณ ${partner.fullnameTh} ${partner.fullnameEn}` } status={partner.status} /> 
                 </div>
             }
             <div className="chat-content">

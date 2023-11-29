@@ -5,5 +5,5 @@ module.exports = app => {
   
   dotenv.config();
     
-    app.get("/api/login/:userId", Auth.login);
+    app.post("/api/login", Auth.login);
 };
