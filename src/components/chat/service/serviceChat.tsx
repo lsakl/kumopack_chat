@@ -1,9 +1,10 @@
 import axios from "axios";
 import { io } from "socket.io-client";
 
-export const baseURL      = "http://localhost:3001/api";
-export const socketServer = "http://localhost:3001";
-axios.defaults.baseURL  = baseURL;
+const protocol = window.location.protocol;
+export const baseURL = `${protocol}//${window.location.hostname}:3001/api`;
+export const socketServer = `${protocol}//${window.location.hostname}:3001`;
+
 
 export const getTokenData = async (data:any) => {
   try {
