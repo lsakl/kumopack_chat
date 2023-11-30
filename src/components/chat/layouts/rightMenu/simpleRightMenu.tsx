@@ -4,6 +4,7 @@ import useOutsideClick 										from '../../hooks/useOutsideClick'
 import DefaultAccordion 									from '../../accordion/defaultAccordion'
 import InfoUser 											from '../../profiles/infoUser'
 import { PartnerContext } 									from './../../context/centerContext';
+import { UserContext }                                      from './../../context/centerContext'
 // import EditNote 											from '../../card/message/editNote'
 
 interface RightMenuProps {
@@ -17,6 +18,7 @@ interface RightMenuProps {
 const RightMenu: React.FC<RightMenuProps> = ({ show, setShowRightMenu, rightMenuData }) => {
 	const { t } = useTranslation()
 	const { partner }						= useContext(PartnerContext);
+	const { user }							= useContext(UserContext);
 	const [showSection1, setShowSection1] 	= useState<boolean>(false)
 	// const [showSection2, setShowSection2] = useState<boolean>(false)
 	const [showSection3, setShowSection3] 	= useState<boolean>(false)
@@ -302,7 +304,7 @@ const RightMenu: React.FC<RightMenuProps> = ({ show, setShowRightMenu, rightMenu
 											</div>
 										</DefaultAccordion> */}
 
-										{partner.userType==="supplier" && (
+										{user.userType!=="buyer" && (
 										<DefaultAccordion
 											show={showSection5}
 											setShow={setShowSection5}
@@ -336,7 +338,7 @@ const RightMenu: React.FC<RightMenuProps> = ({ show, setShowRightMenu, rightMenu
 											</div>
 										</DefaultAccordion>
 										)}
-										{partner.userType==="supplier" && (
+										{user.userType!=="buyer" && (
 										<DefaultAccordion
 											show={showSection6}
 											setShow={setShowSection6}

@@ -5,33 +5,52 @@ const Auth          = function(Auth) { };
 
 Auth.getUserAccount = async (bodyData, dataProfile, result) => {
     if(
-        dataProfile.user.uuId==='' || 
-        dataProfile.user.uuId===undefined || 
-        dataProfile.user.uuId===null || 
-        dataProfile.to.uuId==='' || 
-        dataProfile.to.uuId===undefined || 
-        dataProfile.to.uuId===null
+        (
+            dataProfile.user.uuId==='' || 
+            dataProfile.user.uuId===undefined || 
+            dataProfile.user.uuId===null || 
+            dataProfile.to.uuId==='' || 
+            dataProfile.to.uuId===undefined || 
+            dataProfile.to.uuId===null
+        ) &&
+        bodyData.userRoute !=='admin'
     ){
-        result({status:500, message:"เกิดข้อผิดพลาดในการยืนยันตัวตน", data:dataProfile });
+        result({status:500, message:"เกิดข้อผิดพลาดในการยืนยันตัวตน1", data:dataProfile });
         return;
     }
 
     try {
-        let user = await mongoClient.collection('users').findOne({ uuId: dataProfile.user.uuId });
+        let user = await mongoClient.collection('users').findOne({ uuId: bodyData.userRoute==='admin'?'admin-'+dataProfile.user.email:dataProfile.user.uuId });
         let to = await mongoClient.collection('users').findOne({ uuId: dataProfile.to.uuId });
 
         const dataUserInsert = [];
-
+        
         if(!user){
-            dataUserInsert.push({
-                uuId        : dataProfile.user.uuId,
-                fullnameTh  : dataProfile.user.fullnameTh,
-                fullnameEn  : dataProfile.user.fullnameEn,
-                email       : dataProfile.user.email,
-                image       : process.env.ENDPOINT_IMAGE+dataProfile.user.pictureProfilePath,
-                userType    : bodyData.userRoute,
-                status      : 0
-            });
+            if(bodyData.userRoute==='admin'){
+
+                dataUserInsert.push({
+                    uuId        : 'admin-'+dataProfile.user.email,
+                    fullnameTh  : dataProfile.user.name,
+                    fullnameEn  : dataProfile.user.name,
+                    email       : dataProfile.user.email,
+                    image       : process.env.ENDPOINT_IMAGE+dataProfile.user.pictureProfilePath,
+                    userType    : bodyData.userRoute,
+                    status      : 0
+                });
+
+            }else{
+
+                dataUserInsert.push({
+                    uuId        : dataProfile.user.uuId,
+                    fullnameTh  : dataProfile.user.fullnameTh,
+                    fullnameEn  : dataProfile.user.fullnameEn,
+                    email       : dataProfile.user.email,
+                    image       : process.env.ENDPOINT_IMAGE+dataProfile.user.pictureProfilePath,
+                    userType    : bodyData.userRoute,
+                    status      : 0
+                });
+
+            }
         }
 
         if(!to){
@@ -49,11 +68,12 @@ Auth.getUserAccount = async (bodyData, dataProfile, result) => {
         if(dataUserInsert.length){
             const userInsert = await mongoClient.collection('users').insertMany(dataUserInsert);
             if(userInsert.acknowledged===false || userInsert.insertedCount===0){
-                result({status:500, message:"เกิดข้อผิดพลาดในการยืนยันตัวตน", data:userInsert });
+                result({status:500, message:"เกิดข้อผิดพลาดในการยืนยันตัวตน2", data:userInsert });
                 return;
             }
+            
             if(!user){
-                user = await mongoClient.collection('users').findOne({ uuId: dataProfile.user.uuId });
+                user = await mongoClient.collection('users').findOne({ uuId: bodyData.userRoute==='admin'?'admin-'+dataProfile.user.email:dataProfile.user.uuId });
             }
             if(!to){
                 to = await mongoClient.collection('users').findOne({ uuId: dataProfile.to.uuId });
@@ -63,11 +83,11 @@ Auth.getUserAccount = async (bodyData, dataProfile, result) => {
             return;
         }else{
             const updateUserProfile = await mongoClient.collection('users').updateOne(
-                { uuId: dataProfile.user.uuId },
+                { uuId: bodyData.userRoute==='admin'?'admin-'+dataProfile.user.email:dataProfile.user.uuId },
                 {
                     $set: {
-                        fullnameTh  : dataProfile.user.fullnameTh,
-                        fullnameEn  : dataProfile.user.fullnameEn,
+                        fullnameTh  : bodyData.userRoute==='admin'?dataProfile.user.name:dataProfile.user.fullnameTh,
+                        fullnameEn  : bodyData.userRoute==='admin'?dataProfile.user.name:dataProfile.user.fullnameEn,
                         email       : dataProfile.user.email,
                         image       : process.env.ENDPOINT_IMAGE+dataProfile.user.pictureProfilePath,
                         userType    : bodyData.userRoute
@@ -76,7 +96,7 @@ Auth.getUserAccount = async (bodyData, dataProfile, result) => {
             );
             
             if (updateUserProfile.modifiedCount === 1) {
-                user = await mongoClient.collection('users').findOne({ uuId: dataProfile.user.uuId });
+                user = await mongoClient.collection('users').findOne({ uuId: bodyData.userRoute==='admin'?'admin-'+dataProfile.user.email:dataProfile.user.uuId });
             }
     
             result(null, {status:200, message:"ดึงข้อมูลเรียบร้อยแล้ว", data:{user: user, to: to}});
@@ -84,7 +104,7 @@ Auth.getUserAccount = async (bodyData, dataProfile, result) => {
         }
         
     } catch (error) {
-        result({status:500, message:"เกิดข้อผิดพลาดในการยืนยันตัวตน", data:error });
+        result({status:500, message:"เกิดข้อผิดพลาดในการยืนยันตัวตน3", data:error });
         return;
     }
 };
