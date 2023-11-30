@@ -18,7 +18,7 @@ dotenv.config();
 // };
 
 // app.use(cors(corsOptions));
-app.use(cors());
+// app.use(cors());
 app.use(bodyParser.json({limit: '500mb'}));
 app.use(bodyParser.urlencoded({ extended: true}));
 
