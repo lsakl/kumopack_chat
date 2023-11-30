@@ -1,8 +1,8 @@
 import axios from "axios";
 import { io } from "socket.io-client";
 
-const baseURL           = "http://localhost:3001/api";
-const socketServer      = "http://localhost:3001";
+export const baseURL      = "http://localhost:3001/api";
+export const socketServer = "http://localhost:3001";
 axios.defaults.baseURL  = baseURL;
 
 export const getTokenData = async (data:any) => {
@@ -68,12 +68,12 @@ export const getUserData = () => {
   }
 };
 
-const createHeader = () => {
+const createHeader = (type:string) => {
   const user = getUserData();
 
   const payloadHeader = {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': (type===''||type==='json')?'application/json':'multipart/form-data',
       authorization: `Bearer ${user.data.accessToken}`,
     },
   };
@@ -94,7 +94,7 @@ export const iniSocket = () => {
 };
 
 export const getUserListData = async (userId:string, search:string, page:number, limit:number) => {
-  const header = await createHeader();
+  const header = await createHeader('json');
   try {
     const response = await axios.post(`/contact/list`, {
       userId  : userId,
@@ -102,6 +102,18 @@ export const getUserListData = async (userId:string, search:string, page:number,
       page    : page,
       limit   : limit
     }, header);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const messageFileUpload = async (file:any) => {
+  const header = await createHeader('file');
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await axios.post(`/storage`, formData, header);
     return response.data;
   } catch (error) {
     console.error(error);

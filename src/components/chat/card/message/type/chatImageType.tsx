@@ -1,4 +1,5 @@
 import React from 'react';
+import { baseURL } from './../../../service/serviceChat'
 
 type Props = {
   value : any;
@@ -7,7 +8,7 @@ type Props = {
 const ChatImageType: React.FC<Props> = ({ value }) => {
   return (
     <div className="file-box p-2 card w-50">
-      <img src={value} alt="" />
+      <img src={baseURL+value.url} alt={value.name} />
     </div>
   )
 }

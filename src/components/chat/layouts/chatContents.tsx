@@ -74,10 +74,11 @@ const ChatContents: React.FC<ChildProps> = ({ socket }) => {
 			});
 
       socket.on("chat_message", (data: any) => {
-        if(data){
+        if(data){ 
           setMessages((prevMessages) => [...prevMessages, ...[data].filter(item2 => !prevMessages.some(item1 => item1._id === item2._id))]);
           handleGoToBottom();
         }
+        
 			});
 		}
     // eslint-disable-next-line
@@ -193,7 +194,7 @@ const ChatContents: React.FC<ChildProps> = ({ socket }) => {
             </div>
           )}
           {messages.length > 0 && messages.map((item, key) => (
-              item.messageType === "message" && ((item.from === user.userId && item.to === partner.userId) || (item.from === partner.userId && item.to === user.userId)) && (
+              ((item.from === user.userId && item.to === partner.userId) || (item.from === partner.userId && item.to === user.userId)) && (
                 <div key={key} ref={refs[item._id]}>
                   { messages[key-1] && !isSameDay(item.datetime, messages[key-1].datetime) && (
                     <Message 
@@ -206,7 +207,7 @@ const ChatContents: React.FC<ChildProps> = ({ socket }) => {
                     type={item.messageType}
                     who={(item.from===user.userId)?'me':'you'}
                     name={(item.from===user.userId)?'':`${partner.fullnameTh} ${partner.fullnameEn}`}
-                    data={item.message} 
+                    data={(item.messageType==='message')?item.message:item.data} 
                     datetime={new Date(item.datetime)}
                   />
                 </div>

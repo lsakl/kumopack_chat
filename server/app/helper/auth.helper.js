@@ -1,5 +1,16 @@
 const jwt = require('jsonwebtoken');
 
+exports.decodeToken = function(req) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+    return decoded;
+  } catch (err) {
+    return null;
+  }
+}
+
 exports.generateAccessToken = function(username) {
   return jwt.sign(username, process.env.TOKEN_SECRET, { expiresIn: '1d' });
 }

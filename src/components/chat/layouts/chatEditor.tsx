@@ -3,6 +3,7 @@ import { PartnerContext, UserContext}                     from './../context/cen
 import data                                               from '@emoji-mart/data'
 import Picker                                             from '@emoji-mart/react'
 import { useTranslation }                                 from 'react-i18next';
+import { messageFileUpload }                              from '../service/serviceChat';
 
 interface ChatEditorProps {
   socket: any;
@@ -48,12 +49,13 @@ const ChatEditor: React.FC<ChatEditorProps> = ({ socket }) => {
 
   const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
+      setBtnCtrl(false);
       setFile(event.target.files[0]);
     }else{
       setFile(null);
     }
   };
-
+  
   const handleLinkImageClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     imageInputRef.current!.click();
@@ -61,6 +63,7 @@ const ChatEditor: React.FC<ChatEditorProps> = ({ socket }) => {
 
   const handleImageInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
+      setBtnCtrl(false);
       setFile(event.target.files[0]);
       const file = event.target.files?.[0];
     
@@ -83,7 +86,7 @@ const ChatEditor: React.FC<ChatEditorProps> = ({ socket }) => {
   function handleClickBtnEmoji(e: React.MouseEvent<HTMLButtonElement>, action: boolean) {
     setBtnEmoji(action);
   }
-
+  
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
@@ -91,7 +94,7 @@ const ChatEditor: React.FC<ChatEditorProps> = ({ socket }) => {
     }
   };
 
-  const sendMessageData = () => { 
+  const sendMessageData = async () => { 
     if (message.trim() !== '') {
 
       if(socket){
@@ -106,6 +109,21 @@ const ChatEditor: React.FC<ChatEditorProps> = ({ socket }) => {
       }
       
       setMessage('');
+    }else if(file){
+      const response = await messageFileUpload(file);
+      if(response.status===200){
+        if(socket){
+          socket.emit('chat_message', {
+            from		: user.userId,
+            to 			: partner.userId,
+            message 	: '',
+            data		: response.data,
+            datetime 	: new Date(),
+            messageType : response.data.type
+          });
+        }
+        setFile(null);
+      }
     }
   }
 
@@ -136,6 +154,10 @@ const ChatEditor: React.FC<ChatEditorProps> = ({ socket }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  // useEffect(() => {
+    
+  // }, [file]);
 
   const checkFileType = (fileType:string) => {
     if (fileType.startsWith("image/")) {

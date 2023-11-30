@@ -19,7 +19,7 @@ exports.userDisconnect = (userConnectAll) => {
 };
 
 exports.saveMessage = (data, result) => {
-  if(data.messageType === "message"){
+  if(data.messageType === "message" || data.messageType === "file" || data.messageType === "image"){
     Chat.saveMessageTextType(data, (saveMessageTextTypeErr, saveMessageTextTypeData) => {
       if (saveMessageTextTypeErr){
         result(saveMessageTextTypeErr);

@@ -1,8 +1,8 @@
-const express       = require("express");
-const bodyParser    = require("body-parser");
-const cors          = require("cors");
-const app           = express();
-const dotenv        = require('dotenv');
+const express     = require("express");
+const bodyParser  = require("body-parser");
+const cors        = require("cors");
+const app         = express();
+const dotenv      = require('dotenv');
 
 dotenv.config();
 
@@ -29,6 +29,7 @@ app.get("/", (req, res) => {
 require("./app/routes/auth.routes.js")(app);
 require("./app/routes/user.routes.js")(app);
 require("./app/routes/contact.routes.js")(app);
+require("./app/routes/storage.routes.js")(app);
 
 const server = app.listen(process.env.HTTPPORT, () => {
   console.log(`HTTP PORT : ${process.env.HTTPPORT}.`);
