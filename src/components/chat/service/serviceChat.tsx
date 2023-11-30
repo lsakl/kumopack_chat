@@ -4,13 +4,12 @@ import { io } from "socket.io-client";
 const protocol = window.location.protocol;
 export const baseURL = `${protocol}//${window.location.hostname}:3001/api`;
 export const socketServer = `${protocol}//${window.location.hostname}:3001`;
-
+axios.defaults.baseURL  = baseURL;
 
 export const getTokenData = async (data:any) => {
   try {
 
     const response = await axios.post('/login', data);
-    console.log(response.data);
     if(response && response.status=== 200){
       localStorage.setItem('userId',      response.data.data.user._id);
       localStorage.setItem('uuId',        response.data.data.user.uuId);
