@@ -1,0 +1,20 @@
+.modal {
+    font-family: "Noto Sans Thai", sans-serif;
+    
+    .btn-back {
+        background: #B15FCE;
+        color: #fff;
+        min-width: 130px;
+        max-width: 200px;
+        justify-content: space-evenly;
+        font
+
+        &:hover {
+            background: #9e54b9;
+            color: #fff;
+            min-width: 130px;
+            max-width: 200px;
+            justify-content: space-evenly;
+        }
+    }
+}

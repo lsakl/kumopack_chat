@@ -39,7 +39,6 @@ export const getTokenData = async (data:any) => {
     }
 
   } catch (error) {
-    console.error(error);
     return {status : false, data : {}};
   }
 };
