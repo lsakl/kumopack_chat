@@ -3,6 +3,8 @@ import { useParams, Navigate }                                from 'react-router
 import { UserContext }                                        from './../context/centerContext'
 import { getTokenData, getUserData }                          from '../service/serviceChat';
 import { Modal }                                              from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLeftLong } from '@fortawesome/free-solid-svg-icons';
 
 import './../../../styles/modal.scss';
 
@@ -111,8 +113,8 @@ const RequireAuth: React.FC<RequireAuthProps> = ({ children, state }) => {
               <Modal.Body>
                 <p>ขออภัยในความไม่สะดวกที่ท่านพบในการเข้าสู่ระบบครั้งนี้ กรุณาปิดหน้านี้และลองเข้าถึงระบบอีกครั้งหรือคลิกปุ่มข้างล่างนี้</p>
               </Modal.Body>
-              <Modal.Footer>
-                <button type="button" onClick={handleGoBack} className="btn btn-sm btn-back w-100"> กลับไปก่อนหน้า</button>
+              <Modal.Footer className='d-flex justify-content-start'>
+                <button type="button" onClick={handleGoBack} className="btn btn-sm btn-back w-100"><FontAwesomeIcon icon={faLeftLong} size="lg" className='mr-1'/> กลับไปก่อนหน้า</button>
               </Modal.Footer>
             </Modal>
           </div>;
