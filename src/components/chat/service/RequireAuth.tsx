@@ -31,11 +31,7 @@ const RequireAuth: React.FC<RequireAuthProps> = ({ children, state }) => {
   
 
   const handleGoBack = () => {
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      window.close();
-    }
+    window.close();
   };
   
   const checkAuthentication = async () => {
@@ -44,8 +40,8 @@ const RequireAuth: React.FC<RequireAuthProps> = ({ children, state }) => {
         const response = await getTokenData({
           userRoute: userRoute,
           __token: __token,
-          __to: __to,
-          type: type
+          __to: __to || "",
+          type: type || "",
         });
         
         if (response.status) {

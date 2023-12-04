@@ -14,20 +14,28 @@ exports.login = (req, res) => {
             res.status(checkUserAccountErr.status).send(checkUserAccountErr);
             return;
           }
-          
-          Auth.addContact(userAccount.data.user._id.toString(), userAccount.data.to._id.toString(), (contactErr) => {
-            if (contactErr){
-              res.status(contactErr.status).send(contactErr);
-              return;
-            }
+          if(req.body.type){
+            Auth.addContact(userAccount.data.user._id.toString(), userAccount.data.to._id.toString(), (contactErr) => {
+              if (contactErr){
+                res.status(contactErr.status).send(contactErr);
+                return;
+              }
 
+              userAccount.accessToken = authHealper.generateAccessToken({ 
+                id:userAccount.data.user._id,
+                uuId:userAccount.data.user.uuId,
+              }),
+              res.status(userAccount.status).send(userAccount);
+              return;
+            });
+          }else{
             userAccount.accessToken = authHealper.generateAccessToken({ 
               id:userAccount.data.user._id,
               uuId:userAccount.data.user.uuId,
             }),
             res.status(userAccount.status).send(userAccount);
             return;
-          });
+          }
       });
     });
 

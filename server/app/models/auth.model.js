@@ -8,10 +8,7 @@ Auth.getUserAccount = async (bodyData, dataProfile, result) => {
         (
             dataProfile.user.uuId==='' || 
             dataProfile.user.uuId===undefined || 
-            dataProfile.user.uuId===null || 
-            dataProfile.to.uuId==='' || 
-            dataProfile.to.uuId===undefined || 
-            dataProfile.to.uuId===null
+            dataProfile.user.uuId===null
         ) &&
         bodyData.userRoute !=='admin'
     ){
@@ -21,10 +18,13 @@ Auth.getUserAccount = async (bodyData, dataProfile, result) => {
 
     try {
         let user = await mongoClient.collection('users').findOne({ uuId: bodyData.userRoute==='admin'?'admin-'+dataProfile.user.email:dataProfile.user.uuId });
-        let to = await mongoClient.collection('users').findOne({ uuId: dataProfile.to.uuId });
+        
+        let to = {};
+        if(bodyData.type){
+            to = await mongoClient.collection('users').findOne({ uuId: dataProfile.to.uuId });
+        }
 
         const dataUserInsert = [];
-        
         if(!user){
             if(bodyData.userRoute==='admin'){
 
@@ -53,7 +53,8 @@ Auth.getUserAccount = async (bodyData, dataProfile, result) => {
             }
         }
 
-        if(!to){
+        if(!to && bodyData.type){
+            
             dataUserInsert.push({
                 uuId        : dataProfile.to.uuId,
                 fullnameTh  : dataProfile.to.fullnameTh,
@@ -64,7 +65,7 @@ Auth.getUserAccount = async (bodyData, dataProfile, result) => {
                 status      : 0
             });
         }
-
+        
         if(dataUserInsert.length){
             const userInsert = await mongoClient.collection('users').insertMany(dataUserInsert);
             if(userInsert.acknowledged===false || userInsert.insertedCount===0){
@@ -75,7 +76,7 @@ Auth.getUserAccount = async (bodyData, dataProfile, result) => {
             if(!user){
                 user = await mongoClient.collection('users').findOne({ uuId: bodyData.userRoute==='admin'?'admin-'+dataProfile.user.email:dataProfile.user.uuId });
             }
-            if(!to){
+            if(!to && bodyData.type!==null && bodyData.type!==undefined){
                 to = await mongoClient.collection('users').findOne({ uuId: dataProfile.to.uuId });
             }
             
@@ -98,7 +99,7 @@ Auth.getUserAccount = async (bodyData, dataProfile, result) => {
             if (updateUserProfile.modifiedCount === 1) {
                 user = await mongoClient.collection('users').findOne({ uuId: bodyData.userRoute==='admin'?'admin-'+dataProfile.user.email:dataProfile.user.uuId });
             }
-    
+            
             result(null, {status:200, message:"ดึงข้อมูลเรียบร้อยแล้ว", data:{user: user, to: to}});
             return;
         }
@@ -111,7 +112,7 @@ Auth.getUserAccount = async (bodyData, dataProfile, result) => {
 
 Auth.getUserProfile = async (bodyData, result) => {
     if(bodyData.__token==='' || bodyData.userRoute===''){
-        result({status:500, message:"เกิดข้อผิดพลาดในการยืนยันตัวตน", data:bodyData });
+        result({status:500, message:"เกิดข้อผิดพลาดในการยืนยันตัวตน4", data:bodyData });
         return;
     }
     
@@ -131,17 +132,21 @@ Auth.getUserProfile = async (bodyData, result) => {
             });
         }
 
-        const toProfile = await axios.request({
-            method: 'get',
-            url: process.env.ENDPOINT+process.env[`UUID_${bodyData.type.toUpperCase()}`]+`/${bodyData.__to}`,
-        });
+        let toProfile = {};
+        if(bodyData.__to||bodyData.type){
+            toProfile = await axios.request({
+                method: 'get',
+                url: process.env.ENDPOINT+process.env[`UUID_${bodyData.type.toUpperCase()}`]+`/${bodyData.__to}`,
+            });
+        }
+        
 
 
-        result(null, {status:200, message:"ดึงข้อมูลเรียบร้อยแล้ว", user:userProfile.data, to:toProfile.data });
+        result(null, {status:200, message:"ดึงข้อมูลเรียบร้อยแล้ว", user:userProfile.data, to:(bodyData.__to||bodyData.type)?toProfile.data:{} });
         return;
 
     } catch (error) {
-        result({status:500, message:"เกิดข้อผิดพลาดในการยืนยันตัวตน", data:error });
+        result({status:500, message:"เกิดข้อผิดพลาดในการยืนยันตัวตน5", data:error });
         return;
     }
 };

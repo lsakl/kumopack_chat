@@ -43,16 +43,19 @@ const LeftMenu: React.FC<LeftMenuProps> = ({ socket, setOpenChat }) => {
     if(response && response.status===200  && response.data.length>0){
 
       if(page===1 || (response.search===searchUser && searchUser !== searchBefore)){
-        setPartner({ ...partner,
-          userId        : response.data[0]._id,
-          uuId          : response.data[0].uuId,
-          fullnameTh    : response.data[0].fullnameTh,
-          fullnameEn    : response.data[0].fullnameEn,
-          email         : response.data[0].email,
-          image         : response.data[0].image,
-          userType      : response.data[0].userType,
-          status        : response.data[0].status,
-        });
+        if(response?.data[0]?._id){
+          setPartner({ ...partner,
+            userId        : response.data[0]._id,
+            uuId          : response.data[0].uuId,
+            fullnameTh    : response.data[0].fullnameTh,
+            fullnameEn    : response.data[0].fullnameEn,
+            email         : response.data[0].email,
+            image         : response.data[0].image,
+            userType      : response.data[0].userType,
+            status        : response.data[0].status,
+          });
+        }
+        
       }
       
       if(response.search===searchUser && searchUser !== searchBefore){
