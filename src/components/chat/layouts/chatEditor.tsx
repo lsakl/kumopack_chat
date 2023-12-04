@@ -116,7 +116,7 @@ const ChatEditor: React.FC<ChatEditorProps> = ({ socket }) => {
           socket.emit('chat_message', {
             from		: user.userId,
             to 			: partner.userId,
-            message 	: '',
+            message 	: `[ ${(response.data.type==='image')?'รูป':'ไฟล์'} : ${response.data.name} ]`,
             data		: response.data,
             datetime 	: new Date(),
             messageType : response.data.type

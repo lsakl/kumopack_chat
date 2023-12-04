@@ -21,6 +21,7 @@ const LeftMenu: React.FC<LeftMenuProps> = ({ socket, setOpenChat }) => {
   const [loading, setLoading]                 = useState<boolean>(false);
   const [loadingEnd, setLoadingEnd]           = useState<boolean>(false);
   const [onlineTotal, setOnlineTotal]         = useState<number>(0);
+  const [contactTotal, setContactTotal]       = useState<number>(0);
 
   const { user }                              = useContext(UserContext);
   const { partner, setPartner }               = useContext(PartnerContext);
@@ -31,57 +32,60 @@ const LeftMenu: React.FC<LeftMenuProps> = ({ socket, setOpenChat }) => {
   const loadingRef                            = useRef<HTMLDivElement>(null);
 
   const { t } = useTranslation();
-  const limit = Math.ceil((window.innerHeight-130)/100);  
+  const limit = Math.ceil((window.innerHeight-130)/100);
   const getUserList = async () => {
     let _page = page;
     if(searchBefore!==searchUser){
       _page = 1;
       setPage(1);
     }
-    
-    const response = await getUserListData(user.userId, searchUser, _page, limit);
-    if(response && response.status===200  && response.data.length>0){
-
-      if(page===1 || (response.search===searchUser && searchUser !== searchBefore)){
-        if(response?.data[0]?._id){
-          setPartner({ ...partner,
-            userId        : response.data[0]._id,
-            uuId          : response.data[0].uuId,
-            fullnameTh    : response.data[0].fullnameTh,
-            fullnameEn    : response.data[0].fullnameEn,
-            email         : response.data[0].email,
-            image         : response.data[0].image,
-            userType      : response.data[0].userType,
-            status        : response.data[0].status,
-          });
+    if(contactTotal===0 || contactTotal>partnerDataList.length){
+      const response = await getUserListData(user.userId, searchUser, _page, limit);
+      if(response && response.status===200  && response.data.length>0){
+        setContactTotal(response.total);
+        if(page===1 || (response.search===searchUser && searchUser !== searchBefore)){
+          if(response?.data[0]?._id){
+            setPartner({ ...partner,
+              userId        : response.data[0]._id,
+              uuId          : response.data[0].uuId,
+              fullnameTh    : response.data[0].fullnameTh,
+              fullnameEn    : response.data[0].fullnameEn,
+              email         : response.data[0].email,
+              image         : response.data[0].image,
+              userType      : response.data[0].userType,
+              status        : response.data[0].status,
+            });
+          }
+          
         }
         
-      }
-      
-      if(response.search===searchUser && searchUser !== searchBefore){
-        setPartnerDataList([...response.data]);
-        setSearchBefore(response.search);
-        setLoadingEnd(false);
-      }else{
-        setPartnerDataList([...partnerDataList, ...response.data]);
-      }
+        if(response.search===searchUser && searchUser !== searchBefore){
+          setPartnerDataList([...response.data]);
+          setSearchBefore(response.search);
+          setLoadingEnd(false);
+        }else{
+          setPartnerDataList([...partnerDataList, ...response.data]);
+        }
 
-      setPage(_page+1);
-      setLoading(false);
-    }else if(response && response.total>0 && response.data.length===0){
-      setLoadingEnd(true);
+        setPage(_page+1);
+        setLoading(false);
+      }else if(response && response.total>0 && response.data.length===0){
+        setLoadingEnd(true);
+      }else{
+        setPartner({ ...partner,
+          userId        : '',
+          uuId          : '',
+          fullnameTh    : '',
+          fullnameEn    : '',
+          email         : '',
+          image         : '',
+          userType      : '',
+          status        : 0,
+        });
+        setPartnerDataList([]);
+        setLoadingEnd(true);
+      }
     }else{
-      setPartner({ ...partner,
-        userId        : '',
-        uuId          : '',
-        fullnameTh    : '',
-        fullnameEn    : '',
-        email         : '',
-        image         : '',
-        userType      : '',
-        status        : 0,
-      });
-      setPartnerDataList([]);
       setLoadingEnd(true);
     }
 	};
@@ -136,7 +140,7 @@ const LeftMenu: React.FC<LeftMenuProps> = ({ socket, setOpenChat }) => {
 
   useEffect(() => {
     const getStatus = () => {
-      if (socket && user && partnerDataList.length && document.visibilityState === 'visible') {
+      if (socket && user && document.visibilityState === 'visible') {
         socket.emit('chat_status', {
           userId : user.userId,
           partner : partnerDataList.map(partner => partner._id),
@@ -161,7 +165,7 @@ const LeftMenu: React.FC<LeftMenuProps> = ({ socket, setOpenChat }) => {
 		}
     // eslint-disable-next-line
 	}, [socket]);
-
+  
   useEffect(() => {
     if(partnerDataList.length && status.length){
       const statusList = new Map(status.map(item => [item.contactUserId, item]));

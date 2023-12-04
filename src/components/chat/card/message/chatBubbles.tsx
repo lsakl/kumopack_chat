@@ -12,9 +12,10 @@ type Props = {
     name?     : string
     data?     : any;//urlImage, urlFile, Text, line
     datetime? : Date;
-  };
+    meta?     : boolean;
+};
 
-const ChatBubbles: React.FC<Props> = ({ type, who, name, data, datetime }) => {
+const ChatBubbles: React.FC<Props> = ({ type, who, name, data, datetime, meta }) => {
     const { partner } = useContext(PartnerContext);
     
     return (
@@ -25,7 +26,7 @@ const ChatBubbles: React.FC<Props> = ({ type, who, name, data, datetime }) => {
                 </div>
             }
             <div className="chat-content">
-                <ChatMeta time={(datetime||new Date())} who={(who||'')} name={(name||'')} />
+                {meta&&(<ChatMeta time={(datetime||new Date())} who={(who||'')} name={(name||'')} />)}
                 <div className="chat-bubbles">
                     <div className="chat-bubble">
                         { type === "message" && <ChatMessageType value={data} /> }

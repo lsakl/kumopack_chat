@@ -27,6 +27,19 @@ const ChatContents: React.FC<ChildProps> = ({ socket }) => {
     return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
   };
 
+  const isSameDateTime = (dateStr1: string, dateStr2: string): boolean => {
+    const d1 = new Date(dateStr1);
+    const d2 = new Date(dateStr2);
+
+    return (
+        d1.getFullYear() === d2.getFullYear() &&
+        d1.getMonth() === d2.getMonth() &&
+        d1.getDate() === d2.getDate() &&
+        d1.getHours() === d2.getHours() &&
+        d1.getMinutes() === d2.getMinutes()
+    );
+  };
+
   useEffect(() => {
     const currentLoadingRef = loadingRef.current;
   
@@ -209,6 +222,7 @@ const ChatContents: React.FC<ChildProps> = ({ socket }) => {
                     name={(item.from===user.userId)?'':`${partner.fullnameTh} ${partner.fullnameEn}`}
                     data={(item.messageType==='message')?item.message:item.data} 
                     datetime={new Date(item.datetime)}
+                    meta={messages[key-1] && !isSameDateTime(item.datetime, messages[key-1].datetime)}
                   />
                 </div>
               )
