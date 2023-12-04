@@ -33,13 +33,13 @@ const LeftMenu: React.FC<LeftMenuProps> = ({ socket, setOpenChat }) => {
 
   const { t } = useTranslation();
   const limit = Math.ceil((window.innerHeight-130)/100);
-  const getUserList = async () => {
+  const getUserList = async (tiggle = false) => {
     let _page = page;
     if(searchBefore!==searchUser){
       _page = 1;
       setPage(1);
     }
-    if(contactTotal===0 || contactTotal>partnerDataList.length){
+    if(contactTotal===0 || contactTotal>partnerDataList.length || tiggle){
       const response = await getUserListData(user.userId, searchUser, _page, limit);
       if(response && response.status===200  && response.data.length>0){
         setContactTotal(response.total);
@@ -59,7 +59,7 @@ const LeftMenu: React.FC<LeftMenuProps> = ({ socket, setOpenChat }) => {
           
         }
         
-        if(response.search===searchUser && searchUser !== searchBefore){
+        if((response.search===searchUser && searchUser !== searchBefore) || tiggle){
           setPartnerDataList([...response.data]);
           setSearchBefore(response.search);
           setLoadingEnd(false);
@@ -67,7 +67,9 @@ const LeftMenu: React.FC<LeftMenuProps> = ({ socket, setOpenChat }) => {
           setPartnerDataList([...partnerDataList, ...response.data]);
         }
 
-        setPage(_page+1);
+        if(!tiggle){
+          setPage(_page+1);
+        }
         setLoading(false);
       }else if(response && response.total>0 && response.data.length===0){
         setLoadingEnd(true);
@@ -139,8 +141,30 @@ const LeftMenu: React.FC<LeftMenuProps> = ({ socket, setOpenChat }) => {
   };
 
   useEffect(() => {
+    const handleChatMessage = async (data: any) => {
+      if (data.from !== user.userId) {
+        if (!partnerDataList.some(item => item._id === data.from)) {
+          await getUserList(true);
+        }
+      }
+    };
+  
+    if (socket) {
+      socket.on("chat_message", handleChatMessage);
+    }
+  
+    return () => {
+      if (socket) {
+        socket.off("chat_message", handleChatMessage);
+      }
+    };
+  // eslint-disable-next-line
+  }, [socket, partnerDataList]);
+  
+
+  useEffect(() => {
     const getStatus = () => {
-      if (socket && user && document.visibilityState === 'visible') {
+      if (socket && user && partnerDataList.length && document.visibilityState === 'visible') {
         socket.emit('chat_status', {
           userId : user.userId,
           partner : partnerDataList.map(partner => partner._id),
